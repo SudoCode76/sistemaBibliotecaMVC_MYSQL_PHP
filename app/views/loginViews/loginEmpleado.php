@@ -46,8 +46,6 @@
             </label>
 
             <button class="btn btn-outline">Iniciar Sesion</button>
-            <button class="btn btn-outline btn-success">Registrarse</button>
-            <button class="btn btn-outline btn-error">Soy Empleado</button>
 
 
 
