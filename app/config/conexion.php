@@ -2,14 +2,27 @@
 $server = "localhost";
 $usuario = "root";
 $contrasenia = "";
-$base_de_datos = "biblioteca"; // Asegúrate de que el nombre sea correcto
+$base_de_datos = "biblioteca";
 
-$conexion = new mysqli($server, $usuario, $contrasenia, $base_de_datos);
+// Suprimimos los warnings para manejar los errores nosotros mismos
+$conexion = @new mysqli($server, $usuario, $contrasenia, $base_de_datos);
 
-if ($conexion->connect_errno) {
-    echo "Falló la conexión a MySQL: (" . $conexion->connect_errno . ") " . $conexion->connect_error;
-    exit();
+// Verificamos la conexión
+if ($conexion->connect_error) {
+    die("Error de conexión: " . $conexion->connect_error);
 }
 
-$conexion->set_charset("utf8");
+// Establecemos el conjunto de caracteres a utf8
+if (!$conexion->set_charset("utf8")) {
+    die("Error cargando el conjunto de caracteres utf8: " . $conexion->error);
+}
+
+// Opcional: Configurar el modo de error de MySQL
+$conexion->query("SET SESSION sql_mode = ''");
+
+// Opcional: Configurar la zona horaria
+$conexion->query("SET time_zone = '+00:00'");
+
+// Si llegamos aquí, la conexión fue exitosa
+// echo "Conexión exitosa a la base de datos.";
 ?>

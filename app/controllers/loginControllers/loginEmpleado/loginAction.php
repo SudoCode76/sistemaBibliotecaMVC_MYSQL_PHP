@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['usuario'] = $user['usuario'];
             $_SESSION['rol'] = $user['nombreRol'];
             $_SESSION['codUSUARIOS_ADMIN'] = $user['codUSUARIOS_ADMIN'];
-            header("Location: ../../../views/loginViews/viewsEmpleado/dashboardEmpleado.php");
+            header("Location: ../../../views/viewsEmpleado/dashboardEmpleado.php");
             exit();
         } else {
             header("Location: ../../../views/loginViews/loginEmpleado.php?error=1");

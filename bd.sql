@@ -126,3 +126,18 @@ WHERE e.usuario = ? AND e.password = ?;
 
 
 SELECT * FROM CLIENTES WHERE usuario = 'cperez' AND password = 'password123';
+
+
+
+use biblioteca;
+SELECT * FROM autores;
+SELECT * FROM categorias;
+
+SELECT * FROM libros;
+
+
+
+SELECT l.*, a.nombreAutor, a.apellidoAutor, c.nombreCategoria 
+                  FROM LIBROS l
+                  JOIN AUTORES a ON l.AUTORES_codAutores = a.codAutores
+                  JOIN CATEGORIAS c ON l.CATEGORIAS_codCategoria = c.codCategoria
