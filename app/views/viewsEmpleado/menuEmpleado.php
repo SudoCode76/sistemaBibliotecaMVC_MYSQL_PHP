@@ -33,7 +33,7 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
             if ($_SESSION['rol'] == 'administrador') {
                 echo '<li><a href="../viewsEmpleado/verLibros.php">Ver Libros</a></li>';
                 echo '<li><a href="../viewsEmpleado/GestionLibros.php">Gestionar Libros</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
+                echo '<li><a href="../../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
                 echo '<li><a href="../viewsEmpleado/gestionEmpleados.php">Cuentas Empleados</a></li>';
                 echo '<li><a href="../viewsEmpleado/prestamos.php">Prestamos</a></li>';
                 echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
