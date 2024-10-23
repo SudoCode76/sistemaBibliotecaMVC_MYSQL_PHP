@@ -35,7 +35,7 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
                 echo '<li><a href="../viewsEmpleado/GestionLibros.php">Gestionar Libros</a></li>';
                 echo '<li><a href="../../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
                 echo '<li><a href="../viewsEmpleado/gestionEmpleados.php">Cuentas Empleados</a></li>';
-                echo '<li><a href="../viewsEmpleado/prestamos.php">Prestamos</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionPrestamos.php">Prestamos</a></li>';
                 echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
             } 
             
