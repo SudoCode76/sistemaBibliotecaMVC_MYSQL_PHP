@@ -234,6 +234,8 @@ VALUES
         'empleado'
     );
 
+
+SELECT * FROM EMPLEADOS;
 INSERT INTO SANCIONES (multa, fechaSancion)
 VALUES
     ('50.00', '2024-01-28'),
@@ -283,3 +285,19 @@ VALUES
     ('2024-03-10', '2024-03-17', 'prestado', 31, 1, NULL),
     ('2024-03-12', '2024-03-19', 'prestado', 32, 2, NULL),
     ('2024-03-14', '2024-03-21', 'prestado', 33, 3, NULL);
+
+USE biblioteca;
+SELECT 
+    C.nombre AS nombreCliente,
+    C.apellido AS apellidoCliente,
+    P.codPrestamos,
+    P.fechaPrestamo,
+    P.fechaDevolucion,
+    P.estado
+FROM 
+    PRESTAMOS P
+JOIN 
+    CLIENTES C 
+ON 
+    P.USUARIOS_codUsuarios = C.codUsuarios
+    WHERE c.nombre LIKE ?;
