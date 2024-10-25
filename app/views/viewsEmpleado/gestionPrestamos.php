@@ -97,7 +97,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                                     <td>" . htmlspecialchars($row["estado"]) . "</td>
                                     <td>
                                         <a href='../../controllers/gestionPrestamos/cambiarEstado.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-accent btn-md mx-2'>Cambiar Estado</a>
-                                        <a href='../../controllers/gestionPrestamos/eliminar.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-error btn-md mx-2'>Eliminar</a>
+                                        <a href='../../controllers/gestionPrestamos/eliminarPrestamo.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-error btn-md mx-2'>Eliminar</a>
                                     </td>
                                   </tr>";
                                 }
