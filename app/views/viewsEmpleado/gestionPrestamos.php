@@ -17,12 +17,10 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>GESTIÓN DE PRÉSTAMOS</title>
-
 </head>
 
 <body>
     <div class="min-h-screen bg-base-100 text-base-content">
-
         <div class="container mx-auto p-4">
 
             <?php include "../viewsEmpleado/menuEmpleado.php"; ?>
@@ -30,7 +28,6 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
             <div class="bg-base-200 p-6 rounded-box shadow-lg">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-3xl font-bold">Gestión de Préstamos</h1>
-                    <a href="../../controllers/gestionPrestamos/anadir.php" class="btn btn-primary">Registrar Préstamos</a>
                 </div>
 
                 <!-- Formulario de búsqueda y filtro por estado -->
@@ -42,6 +39,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                         <option value="pendiente" <?php echo $estado === 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
                         <option value="devuelto" <?php echo $estado === 'devuelto' ? 'selected' : ''; ?>>Devuelto</option>
                         <option value="reservado" <?php echo $estado === 'reservado' ? 'selected' : ''; ?>>Reservado</option>
+                        <option value="prestado" <?php echo $estado === 'prestado' ? 'selected' : ''; ?>>Prestado</option>
                         <option value="sancionado" <?php echo $estado === 'sancionado' ? 'selected' : ''; ?>>Sancionado</option>
                     </select>
 
@@ -54,6 +52,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                             <tr>
                                 <th>Nombre</th>
                                 <th>Apellido</th>
+                                <th>Libro</th>
                                 <th>Fecha Préstamo</th>
                                 <th>Fecha Devolución</th>
                                 <th>Estado</th>
@@ -62,10 +61,11 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                         </thead>
                         <tbody>
                             <?php
-                            // Consulta SQL con el filtro de búsqueda y estado
+                            // Consulta SQL con el filtro de búsqueda, estado y título del libro
                             $sql = "SELECT 
                                         C.nombre AS nombreCliente,
                                         C.apellido AS apellidoCliente,
+                                        L.titulo AS tituloLibro,
                                         P.codPrestamos,
                                         P.fechaPrestamo,
                                         P.fechaDevolucion,
@@ -73,9 +73,9 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                                     FROM 
                                         PRESTAMOS P
                                     JOIN 
-                                        CLIENTES C 
-                                    ON 
-                                        P.USUARIOS_codUsuarios = C.codUsuarios
+                                        CLIENTES C ON P.USUARIOS_codUsuarios = C.codUsuarios
+                                    JOIN 
+                                        LIBROS L ON P.LIBROS_codLibros = L.codLibros
                                     WHERE 
                                         C.nombre LIKE ?
                                         AND (? = '' OR P.estado = ?);";
@@ -91,17 +91,18 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                                     echo "<tr>
                                     <td>" . htmlspecialchars($row["nombreCliente"]) . "</td>
                                     <td>" . htmlspecialchars($row["apellidoCliente"]) . "</td>
+                                    <td>" . htmlspecialchars($row["tituloLibro"]) . "</td>
                                     <td>" . htmlspecialchars($row["fechaPrestamo"]) . "</td>
                                     <td>" . htmlspecialchars($row["fechaDevolucion"]) . "</td>
                                     <td>" . htmlspecialchars($row["estado"]) . "</td>
                                     <td>
-                                        <a href='../../controllers/gestionPrestamos/editar.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-accent btn-md mx-2'>Cambiar Estado</a>
+                                        <a href='../../controllers/gestionPrestamos/cambiarEstado.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-accent btn-md mx-2'>Cambiar Estado</a>
                                         <a href='../../controllers/gestionPrestamos/eliminar.php?id=" . urlencode($row["codPrestamos"]) . "' class='btn btn-error btn-md mx-2'>Eliminar</a>
                                     </td>
                                   </tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='6' class='text-center'>No hay préstamos</td></tr>";
+                                echo "<tr><td colspan='7' class='text-center'>No hay préstamos</td></tr>";
                             }
                             $stmt->close();
                             $conexion->close();
