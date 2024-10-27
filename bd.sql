@@ -311,8 +311,12 @@ VALUES
         'admin3',
         'admin',
         'administrador'
-    )
+    );
 
+
+
+UPDATE LIBROS 
+SET urlPortada = 'https://picsum.photos/200/300'; 
 SELECT * FROM PRESTAMOS;
 
 
@@ -351,3 +355,6 @@ VALUES
     ('Sala de Estudio Silenciosa - Capacidad: 2 personas'),
     ('Laboratorio de Computadoras - Capacidad: 15 personas'),
     ('Sala de Estudio 5 - Capacidad: 4 personas');
+
+
+SELECT * FROM LIBROS
