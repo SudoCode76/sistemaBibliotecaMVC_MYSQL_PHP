@@ -301,3 +301,53 @@ JOIN
 ON 
     P.USUARIOS_codUsuarios = C.codUsuarios
     WHERE c.nombre LIKE ?;
+
+
+use biblioteca;
+INSERT INTO
+    EMPLEADOS (usuario, password, rol)
+VALUES
+    (
+        'admin3',
+        'admin',
+        'administrador'
+    )
+
+SELECT * FROM PRESTAMOS;
+
+
+SELECT * FROM SANCIONES;
+SELECT * FROM PRESTAMOS;
+
+
+SELECT * FROM reservacuarto;
+
+ALTER TABLE reservaCuarto
+ADD estado VARCHAR(45) NOT NULL DEFAULT 'pendiente';
+
+
+INSERT INTO reservaCuarto (fechaReserva, horaReserva, cuartoEstudio_codCuartoEstudio, USUARIOS_codUsuarios, estado)
+VALUES 
+    ('2024-11-01', '10:00', 1, 1, 'pendiente'),
+    ('2024-11-01', '12:00', 2, 2, 'confirmada'),
+    ('2024-11-02', '14:00', 1, 3, 'cancelada'),
+    ('2024-11-02', '16:00', 3, 4, 'en uso'),
+    ('2024-11-03', '09:00', 2, 5, 'finalizada'),
+    ('2024-11-03', '11:00', 4, 6, 'pendiente'),
+    ('2024-11-04', '15:00', 3, 7, 'confirmada'),
+    ('2024-11-04', '17:00', 4, 8, 'cancelada'),
+    ('2024-11-05', '10:00', 1, 9, 'en uso'),
+    ('2024-11-05', '13:00', 2, 10, 'finalizada');
+
+INSERT INTO cuartoEstudio (nombreCuarto)
+VALUES
+    ('Sala de Estudio 1 - Capacidad: 4 personas'),
+    ('Sala de Estudio 2 - Capacidad: 6 personas'),
+    ('Sala de Reunión 1 - Capacidad: 8 personas'),
+    ('Sala de Conferencias - Capacidad: 20 personas'),
+    ('Sala de Estudio 3 - Capacidad: 4 personas'),
+    ('Sala de Estudio 4 - Capacidad: 6 personas'),
+    ('Sala de Trabajo en Grupo - Capacidad: 10 personas'),
+    ('Sala de Estudio Silenciosa - Capacidad: 2 personas'),
+    ('Laboratorio de Computadoras - Capacidad: 15 personas'),
+    ('Sala de Estudio 5 - Capacidad: 4 personas');

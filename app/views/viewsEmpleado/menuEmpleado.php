@@ -37,6 +37,8 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
                 echo '<li><a href="../viewsEmpleado/gestionEmpleados.php">Cuentas Empleados</a></li>';
                 echo '<li><a href="../viewsEmpleado/gestionPrestamos.php">Prestamos</a></li>';
                 echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
+
             } 
             
             elseif ($_SESSION['rol'] == 'empleado') {

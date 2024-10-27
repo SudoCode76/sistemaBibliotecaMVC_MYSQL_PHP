@@ -4,6 +4,7 @@ include '../../config/conexion.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado = $_POST['estado'];
     $codPrestamos = $_POST['codPrestamos'];
+    $montoSancion = isset($_POST['montoSancion']) ? $_POST['montoSancion'] : null;
 
     // Primero, obtenemos el estado actual y la cantidad disponible del libro
     $sql = "SELECT P.estado, L.cantidadDisponible, L.codLibros
@@ -25,15 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Préstamo no encontrado.";
     }
 
-    $stmt->close();  // Cerramos el $stmt después de obtener los resultados
+    $stmt->close();
 
     // Verificamos si el estado ha cambiado de "devuelto" a otro estado o viceversa
     if ($estadoActual !== $estado) {
         if ($estado == "devuelto" && $estadoActual != "devuelto") {
-            // Si el libro ha sido devuelto, incrementamos la cantidad disponible
             $sqlUpdateLibro = "UPDATE LIBROS SET cantidadDisponible = cantidadDisponible + 1 WHERE codLibros = ?";
         } elseif (($estadoActual == "devuelto" || $estadoActual == "prestado") && ($estado == "pendiente" || $estado == "reservado" || $estado == "prestado")) {
-            // Si el estado cambia de "devuelto" a otro (pendiente, reservado o prestado), reducimos la cantidad disponible
             if ($cantidadDisponible > 0) {
                 $sqlUpdateLibro = "UPDATE LIBROS SET cantidadDisponible = cantidadDisponible - 1 WHERE codLibros = ?";
             } else {
@@ -41,16 +40,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        // Ejecutar la actualización de la cantidad si es necesario
         if (isset($sqlUpdateLibro) && empty($error)) {
             $stmtUpdateLibro = $conexion->prepare($sqlUpdateLibro);
             $stmtUpdateLibro->bind_param("i", $codLibros);
             $stmtUpdateLibro->execute();
-            $stmtUpdateLibro->close();  // Cerramos después de la ejecución
+            $stmtUpdateLibro->close();
         }
     }
 
-    // Si no hay errores, actualizamos el estado del préstamo
+    // Si el estado es "sancionado", registramos la sanción en la tabla SANCIONES
+    if ($estado == "sancionado" && !empty($montoSancion)) {
+        $fechaSancion = date("Y-m-d");
+        $sqlSancion = "INSERT INTO SANCIONES (multa, fechaSancion) VALUES (?, ?)";
+        $stmtSancion = $conexion->prepare($sqlSancion);
+        $stmtSancion->bind_param("ss", $montoSancion, $fechaSancion);
+        $stmtSancion->execute();
+        $stmtSancion->close();
+    }
+
     if (empty($error)) {
         $sql = "UPDATE PRESTAMOS SET estado=? WHERE codPrestamos=?";
         $stmt = $conexion->prepare($sql);
@@ -63,14 +70,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Error al actualizar: " . $stmt->error;
         }
 
-        $stmt->close();  // Cerramos aquí
+        $stmt->close();
     }
 }
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Obtener información del préstamo y libro asociado
     $sql = "SELECT 
                 P.codPrestamos,
                 P.estado,
@@ -107,7 +113,7 @@ if (isset($_GET['id'])) {
         $error = "Préstamo no encontrado.";
     }
 
-    $stmt->close();  // Cierra después de obtener los resultados
+    $stmt->close();
 } else {
     $error = "ID de préstamo no especificado.";
 }
@@ -125,7 +131,6 @@ if (isset($_GET['id'])) {
 
 <body>
     <div class="container mx-auto mt-5">
-
         <h1 class="text-2xl font-bold mb-5">Editar Estado del Préstamo</h1>
 
         <?php if (isset($error)): ?>
@@ -171,13 +176,18 @@ if (isset($_GET['id'])) {
 
                 <div class="form-control">
                     <label for="estado" class="label">Estado:</label>
-                    <select class="select select-bordered" id="estado" name="estado" required>
+                    <select class="select select-bordered" id="estado" name="estado" required onchange="toggleSancionField()">
                         <option value="pendiente" <?php if ($estado == 'pendiente') echo 'selected'; ?>>Pendiente</option>
                         <option value="devuelto" <?php if ($estado == 'devuelto') echo 'selected'; ?>>Devuelto</option>
                         <option value="reservado" <?php if ($estado == 'reservado') echo 'selected'; ?>>Reservado</option>
                         <option value="prestado" <?php if ($estado == 'prestado') echo 'selected'; ?>>Prestado</option>
                         <option value="sancionado" <?php if ($estado == 'sancionado') echo 'selected'; ?>>Sancionado</option>
                     </select>
+                </div>
+
+                <div class="form-control" id="sancionField" style="display: none;">
+                    <label for="montoSancion" class="label">Monto de la Sanción:</label>
+                    <input type="number" class="input input-bordered" id="montoSancion" name="montoSancion" step="0.01" min="0">
                 </div>
 
                 <div class="form-control">
@@ -188,6 +198,21 @@ if (isset($_GET['id'])) {
     </div>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function toggleSancionField() {
+            const estado = document.getElementById('estado').value;
+            const sancionField = document.getElementById('sancionField');
+
+            if (estado === 'sancionado') {
+                sancionField.style.display = 'block';
+            } else {
+                sancionField.style.display = 'none';
+            }
+        }
+
+        // Llamamos a la función al cargar la página por si el estado ya es "sancionado"
+        document.addEventListener('DOMContentLoaded', toggleSancionField);
+    </script>
 </body>
 
 </html>
