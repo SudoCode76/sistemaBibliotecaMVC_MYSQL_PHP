@@ -15,7 +15,10 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
 <body class="bg-gray-100">
 <div class="navbar bg-base-200 rounded-box shadow-lg mb-4">
     <div class="flex-1">
-        <a class="text-xl font-bold">Biblioteca Bolivia</a>
+        <!-- Icono de biblioteca -->
+        <a class="btn btn-ghost normal-case text-xl">
+            <i class="fas fa-book"></i>
+        </a>
     </div>
 
     <!-- Botón hamburguesa para pantallas pequeñas -->
@@ -29,7 +32,6 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
     <div id="menuContent" class="hidden lg:flex flex-none">
         <ul class="menu menu-horizontal px-1">
             <?php
-
             if ($_SESSION['rol'] == 'administrador') {
                 echo '<li><a href="../viewsEmpleado/verLibros.php">Ver Libros</a></li>';
                 echo '<li><a href="../viewsEmpleado/GestionLibros.php">Gestionar Libros</a></li>';
@@ -38,9 +40,7 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
                 echo '<li><a href="../viewsEmpleado/gestionPrestamos.php">Prestamos</a></li>';
                 echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
                 echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
-
             } 
-            
             elseif ($_SESSION['rol'] == 'empleado') {
                 echo '<li><a href="../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
                 echo '<li><a href="../viewsEmpleado/prestamos.php">Prestamos</a></li>';
@@ -49,9 +49,17 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
             ?>
         </ul>
 
+        <!-- Ícono de perfil -->
+        <a class="btn btn-ghost btn-circle" href="../viewsEmpleado/perfilEmpleado.php">
+            <i class="fas fa-user"></i>
+        </a>
+
+        <!-- Botón para cambiar el tema -->
         <button class="btn btn-ghost" onclick="toggleTheme()">
             <i class="fas fa-adjust"></i>
         </button>
+
+        <!-- Botón para cerrar sesión -->
         <a class="btn btn-ghost" href="../../controllers/loginControllers/loginEmpleado/logout.php">Cerrar sesión</a>
     </div>
 </div>
@@ -60,21 +68,23 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
 <div id="mobileMenu" class="lg:hidden hidden">
     <ul class="menu p-4 bg-base-100 rounded-box">
         <?php
-
         if ($_SESSION['rol'] == 'administrador') {
             echo '<li><a href="GestionLibros.php">Gestionar Libros</a></li>';
             echo '<li><a href="gestionClientes.php">Cuentas Clientes</a></li>';
             echo '<li><a href="gestionEmpleados.php">Cuentas Empleados</a></li>';
             echo '<li><a href="prestamos.php">Prestamos</a></li>';
             echo '<li><a href="devoluciones.php">Devoluciones</a></li>';
+            echo '<li><a href="gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
         } 
-        
         elseif ($_SESSION['rol'] == 'empleado') {
             echo '<li><a href="gestionClientes.php">Cuentas Clientes</a></li>';
             echo '<li><a href="prestamos.php">Prestamos</a></li>';
             echo '<li><a href="devoluciones.php">Devoluciones</a></li>';
         } 
         ?>
+        <!-- Ícono de perfil en menú móvil -->
+        <li><a href="../viewsEmpleado/perfilEmpleado.php"><i class="fas fa-user mr-2"></i>Perfil</a></li>
+        <li><a href="../../controllers/loginControllers/loginEmpleado/logout.php">Cerrar sesión</a></li>
     </ul>
 </div>
 
