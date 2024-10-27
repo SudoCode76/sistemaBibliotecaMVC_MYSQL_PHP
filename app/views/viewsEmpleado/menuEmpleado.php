@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
 <div class="navbar bg-base-200 rounded-box shadow-lg mb-4">
     <div class="flex-1">
         <!-- Icono de biblioteca -->
-        <a class="btn btn-ghost normal-case text-xl">
+        <a href="../viewsEmpleado/dashboardEmpleado.php" class="btn btn-ghost normal-case text-xl">
             <i class="fas fa-book"></i>
         </a>
     </div>
