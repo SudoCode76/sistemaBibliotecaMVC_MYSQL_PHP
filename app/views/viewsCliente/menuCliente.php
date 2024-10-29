@@ -38,7 +38,7 @@ require_once __DIR__ . '/../../config/checkSessionCliente.php';
         </ul>
 
         <!-- Ícono de carrito de compras -->
-        <a class="btn btn-ghost btn-circle" href="../verLibros/reservarLibro.php">
+        <a class="btn btn-ghost btn-circle" href="/app/views/viewsCliente/verLibros/reservarLibro.php">
             <i class="fas fa-shopping-cart"></i>
         </a>
 
@@ -65,7 +65,7 @@ require_once __DIR__ . '/../../config/checkSessionCliente.php';
         <li><a href="/app/views/viewsCliente/misSanciones/misSanciones.php"><i class="fas fa-exclamation-circle mr-2"></i>Mis Sanciones</a></li>
         <li><a href="/app/views/viewsCliente/misReservasCuarto/misReservas.php"><i class="fas fa-door-open mr-2"></i>Mis Reservas de Cuartos</a></li>
         <!-- Ícono de carrito de compras en menú móvil -->
-        <li><a href="/app/views/viewsCliente/reservarLibro.php"><i class="fas fa-shopping-cart mr-2"></i>Carrito</a></li>
+        <li><a href="/app/views/viewsCliente/verLibros/reservarLibro.php"><i class="fas fa-shopping-cart mr-2"></i>Carrito</a></li>
         <!-- Ícono de perfil en menú móvil -->
         <li><a href="/app/views/viewsCliente/perfilCliente.php"><i class="fas fa-user mr-2"></i>Perfil</a></li>
         <li><a href="../../controllers/loginControllers/loginCliente/logout.php">Cerrar sesión</a></li>

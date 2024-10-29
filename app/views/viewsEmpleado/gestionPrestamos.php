@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../config/conexion.php';
 
 // Obtener parámetros de búsqueda y filtro de estado
 $search = isset($_GET['search']) ? $_GET['search'] : '';
-$estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto, mostrar los "pendiente"
+$estado = isset($_GET['estado']) ? $_GET['estado'] : '';
 
 ?>
 
@@ -36,11 +36,12 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                     
                     <select name="estado" class="select select-bordered">
                         <option value="">Todos los estados</option>
-                        <option value="pendiente" <?php echo $estado === 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
-                        <option value="devuelto" <?php echo $estado === 'devuelto' ? 'selected' : ''; ?>>Devuelto</option>
                         <option value="reservado" <?php echo $estado === 'reservado' ? 'selected' : ''; ?>>Reservado</option>
+                        <option value="pendiente" <?php echo $estado === 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
                         <option value="prestado" <?php echo $estado === 'prestado' ? 'selected' : ''; ?>>Prestado</option>
+                        <option value="devuelto" <?php echo $estado === 'devuelto' ? 'selected' : ''; ?>>Devuelto</option>
                         <option value="sancionado" <?php echo $estado === 'sancionado' ? 'selected' : ''; ?>>Sancionado</option>
+                        <option value="cancelado" <?php echo $estado === 'cancelado' ? 'selected' : ''; ?>>Cancelado</option>
                     </select>
 
                     <button type="submit" class="btn btn-primary">Buscar</button>
@@ -61,7 +62,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
                         </thead>
                         <tbody>
                             <?php
-                            // Consulta SQL con el filtro de búsqueda, estado y título del libro
+                            // Consulta SQL con el filtro de búsqueda y estado
                             $sql = "SELECT 
                                         C.nombre AS nombreCliente,
                                         C.apellido AS apellidoCliente,
@@ -113,6 +114,23 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : 'pendiente'; // Por defecto
             </div>
         </div>
     </div>
+
+    <!-- JavaScript para mostrar/ocultar el campo de monto basado en el estado seleccionado -->
+    <script>
+        const estadoSelect = document.querySelector('select[name="estado"]');
+        const montoInput = document.querySelector('#montoInput'); // Supongamos que el input de monto tiene este ID
+
+        function toggleMontoInput() {
+            if (estadoSelect.value === 'sancionado') {
+                montoInput.classList.remove('hidden');
+            } else {
+                montoInput.classList.add('hidden');
+            }
+        }
+
+        estadoSelect.addEventListener('change', toggleMontoInput);
+        document.addEventListener('DOMContentLoaded', toggleMontoInput); // Asegura que el campo esté oculto o visible en carga inicial
+    </script>
 </body>
 
 </html>

@@ -15,37 +15,36 @@ if (!isset($_SESSION['carrito'])) {
 // Agregar un libro al carrito si se recibe un ID de libro
 if (isset($_GET['id'])) {
     $libroId = $_GET['id'];
-    // Solo agregar si aún no está en el carrito
     if (!in_array($libroId, $_SESSION['carrito'])) {
         $_SESSION['carrito'][] = $libroId;
     }
-    header("Location: reservarLibro.php"); // Redirigir para evitar agregar el mismo libro dos veces
+    header("Location: reservarLibro.php"); 
     exit();
 }
 
 // Eliminar un libro del carrito si se recibe un parámetro 'remove'
 if (isset($_GET['remove'])) {
     $libroId = $_GET['remove'];
-    // Remover el libro del array de carrito
     if (($key = array_search($libroId, $_SESSION['carrito'])) !== false) {
         unset($_SESSION['carrito'][$key]);
     }
-    header("Location: reservarLibro.php"); // Redirigir para actualizar la vista del carrito
+    header("Location: reservarLibro.php"); 
     exit();
 }
 
 // Confirmar reserva de todos los libros en el carrito
 if (isset($_POST['confirmarReserva'])) {
+    $fechaDevolucion = $_POST['fechaDevolucion'] ?? null;
     foreach ($_SESSION['carrito'] as $libroId) {
-        $query = "INSERT INTO PRESTAMOS (fechaPrestamo, estado, LIBROS_codLibros, USUARIOS_codUsuarios)
-                  VALUES (CURDATE(), 'reservado', ?, ?)";
+        $query = "INSERT INTO PRESTAMOS (fechaPrestamo, fechaDevolucion, estado, LIBROS_codLibros, USUARIOS_codUsuarios)
+                  VALUES (CURDATE(), ?, 'reservado', ?, ?)";
         $stmt = $conexion->prepare($query);
-        $stmt->bind_param("ii", $libroId, $_SESSION['codUsuarios']);
+        $stmt->bind_param("sii", $fechaDevolucion, $libroId, $_SESSION['codUsuarios']);
         $stmt->execute();
         $stmt->close();
     }
-    $_SESSION['carrito'] = []; // Vaciar el carrito después de confirmar la reserva
-    $mensaje = "Reserva confirmada exitosamente.";
+    $_SESSION['carrito'] = [];
+    $mensaje = "Reserva confirmada exitosamente con fecha de devolución: " . htmlspecialchars($fechaDevolucion);
 }
 
 // Obtener detalles de los libros en el carrito
@@ -101,8 +100,10 @@ $conexion->close();
             <?php endforeach; ?>
         </div>
 
-        <!-- Botón para confirmar reserva -->
+        <!-- Formulario para confirmar reserva con fecha de devolución -->
         <form method="POST" class="text-center">
+            <label for="fechaDevolucion" class="block text-lg font-semibold mb-2 text-gray-600">Fecha de Devolución</label>
+            <input type="date" name="fechaDevolucion" id="fechaDevolucion" required class="input input-bordered w-full max-w-xs mb-4">
             <button type="submit" name="confirmarReserva" class="btn btn-primary bg-indigo-600 hover:bg-indigo-500 font-semibold px-6 py-3 rounded-full text-white text-lg shadow-md hover:shadow-lg transition-all duration-300">
                 Confirmar Reserva
             </button>

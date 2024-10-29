@@ -177,11 +177,13 @@ if (isset($_GET['id'])) {
                 <div class="form-control">
                     <label for="estado" class="label">Estado:</label>
                     <select class="select select-bordered" id="estado" name="estado" required onchange="toggleSancionField()">
-                        <option value="pendiente" <?php if ($estado == 'pendiente') echo 'selected'; ?>>Pendiente</option>
-                        <option value="devuelto" <?php if ($estado == 'devuelto') echo 'selected'; ?>>Devuelto</option>
                         <option value="reservado" <?php if ($estado == 'reservado') echo 'selected'; ?>>Reservado</option>
+                        <option value="pendiente" <?php if ($estado == 'pendiente') echo 'selected'; ?>>Pendiente</option>
                         <option value="prestado" <?php if ($estado == 'prestado') echo 'selected'; ?>>Prestado</option>
+                        <option value="devuelto" <?php if ($estado == 'devuelto') echo 'selected'; ?>>Devuelto</option>
                         <option value="sancionado" <?php if ($estado == 'sancionado') echo 'selected'; ?>>Sancionado</option>
+                        <option value="cancelado" <?php if ($estado == 'cancelado') echo 'selected'; ?>>Cancelado</option>
+
                     </select>
                 </div>
 
