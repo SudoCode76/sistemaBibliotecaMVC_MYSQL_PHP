@@ -67,7 +67,6 @@ CREATE TABLE PRESTAMOS (
     LIBROS_codLibros INT,
     USUARIOS_codUsuarios INT,
     SANCIONES_codSancion INT,
-    FOREIGN KEY (LIBROS_codLibros) REFERENCES LIBROS (codLibros),
     FOREIGN KEY (USUARIOS_codUsuarios) REFERENCES CLIENTES (codUsuarios),
     FOREIGN KEY (SANCIONES_codSancion) REFERENCES SANCIONES (codSancion)
 );
@@ -279,6 +278,10 @@ VALUES
     ('2024-03-07', '2024-03-14', 'reservado', 29, 9, NULL),
     ('2024-03-09', '2024-03-16', 'pendiente', 30, 10, NULL);
 
+    UPDATE PRESTAMOS
+SET estado = 'pendiente';
+
+
 
 INSERT INTO PRESTAMOS (fechaPrestamo, fechaDevolucion, estado, LIBROS_codLibros, USUARIOS_codUsuarios, SANCIONES_codSancion)
 VALUES
@@ -357,4 +360,30 @@ VALUES
     ('Sala de Estudio 5 - Capacidad: 4 personas');
 
 
-SELECT * FROM LIBROS
+SELECT * FROM prestamos;
+
+
+-- Paso 1: Crear la tabla intermedia para la relación muchos a muchos
+CREATE TABLE LIBROS_has_PRESTAMOS (
+    LIBROS_codLibros INT,
+    PRESTAMOS_codPrestamos INT,
+    PRIMARY KEY (LIBROS_codLibros, PRESTAMOS_codPrestamos),
+    FOREIGN KEY (LIBROS_codLibros) REFERENCES LIBROS(codLibros) ON DELETE CASCADE,
+    FOREIGN KEY (PRESTAMOS_codPrestamos) REFERENCES PRESTAMOS(codPrestamos) ON DELETE CASCADE
+);
+
+
+-- Paso 1: Eliminar la restricción de clave externa en la columna LIBROS_codLibros
+ALTER TABLE PRESTAMOS DROP FOREIGN KEY prestamos_ibfk_1;
+
+-- Paso 2: Eliminar la columna LIBROS_codLibros de la tabla PRESTAMOS
+ALTER TABLE PRESTAMOS DROP COLUMN LIBROS_codLibros;
+
+
+
+-- Paso 3: Migrar los datos existentes de PRESTAMOS a la nueva estructura
+-- Insertar en la tabla intermedia los registros actuales de relación entre LIBROS y PRESTAMOS
+INSERT INTO LIBROS_has_PRESTAMOS (LIBROS_codLibros, PRESTAMOS_codPrestamos)
+SELECT LIBROS_codLibros, codPrestamos
+FROM PRESTAMOS
+WHERE LIBROS_codLibros IS NOT NULL;

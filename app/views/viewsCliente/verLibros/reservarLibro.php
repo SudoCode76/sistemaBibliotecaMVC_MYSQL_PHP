@@ -35,14 +35,28 @@ if (isset($_GET['remove'])) {
 // Confirmar reserva de todos los libros en el carrito
 if (isset($_POST['confirmarReserva'])) {
     $fechaDevolucion = $_POST['fechaDevolucion'] ?? null;
+
+    // Primero, crear la reserva en la tabla PRESTAMOS
+    $query = "INSERT INTO PRESTAMOS (fechaPrestamo, fechaDevolucion, estado, USUARIOS_codUsuarios)
+              VALUES (CURDATE(), ?, 'reservado', ?)";
+    $stmt = $conexion->prepare($query);
+    $stmt->bind_param("si", $fechaDevolucion, $_SESSION['codUsuarios']);
+    $stmt->execute();
+    
+    // Obtener el ID de la reserva recién creada
+    $codPrestamos = $stmt->insert_id;
+    $stmt->close();
+
+    // Asociar cada libro del carrito a la reserva en LIBROS_has_PRESTAMOS
     foreach ($_SESSION['carrito'] as $libroId) {
-        $query = "INSERT INTO PRESTAMOS (fechaPrestamo, fechaDevolucion, estado, LIBROS_codLibros, USUARIOS_codUsuarios)
-                  VALUES (CURDATE(), ?, 'reservado', ?, ?)";
+        $query = "INSERT INTO LIBROS_has_PRESTAMOS (LIBROS_codLibros, PRESTAMOS_codPrestamos)
+                  VALUES (?, ?)";
         $stmt = $conexion->prepare($query);
-        $stmt->bind_param("sii", $fechaDevolucion, $libroId, $_SESSION['codUsuarios']);
+        $stmt->bind_param("ii", $libroId, $codPrestamos);
         $stmt->execute();
         $stmt->close();
     }
+
     $_SESSION['carrito'] = [];
     $mensaje = "Reserva confirmada exitosamente con fecha de devolución: " . htmlspecialchars($fechaDevolucion);
 }

@@ -53,7 +53,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
                             <tr>
                                 <th>Nombre</th>
                                 <th>Apellido</th>
-                                <th>Libro</th>
+                                <th>Libros</th>
                                 <th>Fecha Préstamo</th>
                                 <th>Fecha Devolución</th>
                                 <th>Estado</th>
@@ -66,7 +66,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
                             $sql = "SELECT 
                                         C.nombre AS nombreCliente,
                                         C.apellido AS apellidoCliente,
-                                        L.titulo AS tituloLibro,
+                                        GROUP_CONCAT(L.titulo SEPARATOR ', ') AS tituloLibro, -- Usar GROUP_CONCAT para obtener varios títulos
                                         P.codPrestamos,
                                         P.fechaPrestamo,
                                         P.fechaDevolucion,
@@ -76,10 +76,14 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
                                     JOIN 
                                         CLIENTES C ON P.USUARIOS_codUsuarios = C.codUsuarios
                                     JOIN 
-                                        LIBROS L ON P.LIBROS_codLibros = L.codLibros
+                                        LIBROS_has_PRESTAMOS LP ON P.codPrestamos = LP.PRESTAMOS_codPrestamos
+                                    JOIN 
+                                        LIBROS L ON LP.LIBROS_codLibros = L.codLibros
                                     WHERE 
                                         C.nombre LIKE ?
-                                        AND (? = '' OR P.estado = ?);";
+                                        AND (? = '' OR P.estado = ?)
+                                    GROUP BY 
+                                        P.codPrestamos;";  // Agrupando por codPrestamos
                             
                             $stmt = $conexion->prepare($sql);
                             $searchParam = "%$search%";
@@ -115,21 +119,21 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
         </div>
     </div>
 
-    <!-- JavaScript para mostrar/ocultar el campo de monto basado en el estado seleccionado -->
     <script>
-        const estadoSelect = document.querySelector('select[name="estado"]');
-        const montoInput = document.querySelector('#montoInput'); // Supongamos que el input de monto tiene este ID
-
-        function toggleMontoInput() {
-            if (estadoSelect.value === 'sancionado') {
-                montoInput.classList.remove('hidden');
-            } else {
-                montoInput.classList.add('hidden');
-            }
+        // Alternar entre modo claro y oscuro
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute("data-theme");
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+            html.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
         }
 
-        estadoSelect.addEventListener('change', toggleMontoInput);
-        document.addEventListener('DOMContentLoaded', toggleMontoInput); // Asegura que el campo esté oculto o visible en carga inicial
+        // Aplicar el tema guardado en localStorage
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        });
     </script>
 </body>
 

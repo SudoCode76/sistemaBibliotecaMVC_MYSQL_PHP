@@ -12,9 +12,11 @@ if (!$codUsuario) {
     die("Error: Usuario no autenticado.");
 }
 
+// Consulta para obtener los préstamos del cliente usando la nueva relación
 $query = "SELECT P.codPrestamos, L.titulo, P.fechaPrestamo, P.fechaDevolucion, P.estado
           FROM PRESTAMOS P
-          JOIN LIBROS L ON P.LIBROS_codLibros = L.codLibros
+          JOIN LIBROS_has_PRESTAMOS LP ON P.codPrestamos = LP.PRESTAMOS_codPrestamos
+          JOIN LIBROS L ON LP.LIBROS_codLibros = L.codLibros
           WHERE P.USUARIOS_codUsuarios = ?
           ORDER BY P.fechaPrestamo DESC";
 $stmt = $conexion->prepare($query);
