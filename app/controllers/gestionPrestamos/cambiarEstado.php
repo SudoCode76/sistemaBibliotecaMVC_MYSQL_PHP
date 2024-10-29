@@ -6,49 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $codPrestamos = $_POST['codPrestamos'];
     $montoSancion = isset($_POST['montoSancion']) ? $_POST['montoSancion'] : null;
 
-    // Primero, obtenemos el estado actual y la cantidad disponible del libro
-    $sql = "SELECT P.estado, L.cantidadDisponible, L.codLibros
-            FROM PRESTAMOS P
-            JOIN LIBROS L ON P.LIBROS_codLibros = L.codLibros
-            WHERE P.codPrestamos = ?";
-
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $codPrestamos);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows == 1) {
-        $row = $result->fetch_assoc();
-        $estadoActual = $row['estado'];
-        $cantidadDisponible = $row['cantidadDisponible'];
-        $codLibros = $row['codLibros'];
-    } else {
-        $error = "Préstamo no encontrado.";
-    }
-
-    $stmt->close();
-
-    // Verificamos si el estado ha cambiado de "devuelto" a otro estado o viceversa
-    if ($estadoActual !== $estado) {
-        if ($estado == "devuelto" && $estadoActual != "devuelto") {
-            $sqlUpdateLibro = "UPDATE LIBROS SET cantidadDisponible = cantidadDisponible + 1 WHERE codLibros = ?";
-        } elseif (($estadoActual == "devuelto" || $estadoActual == "prestado") && ($estado == "pendiente" || $estado == "reservado" || $estado == "prestado")) {
-            if ($cantidadDisponible > 0) {
-                $sqlUpdateLibro = "UPDATE LIBROS SET cantidadDisponible = cantidadDisponible - 1 WHERE codLibros = ?";
-            } else {
-                $error = "No hay más copias disponibles del libro.";
-            }
-        }
-
-        if (isset($sqlUpdateLibro) && empty($error)) {
-            $stmtUpdateLibro = $conexion->prepare($sqlUpdateLibro);
-            $stmtUpdateLibro->bind_param("i", $codLibros);
-            $stmtUpdateLibro->execute();
-            $stmtUpdateLibro->close();
-        }
-    }
-
-    // Si el estado es "sancionado", registramos la sanción en la tabla SANCIONES
+    // Verificar si se está sancionando
     if ($estado == "sancionado" && !empty($montoSancion)) {
         $fechaSancion = date("Y-m-d");
         $sqlSancion = "INSERT INTO SANCIONES (multa, fechaSancion) VALUES (?, ?)";
@@ -58,29 +16,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtSancion->close();
     }
 
-    if (empty($error)) {
-        $sql = "UPDATE PRESTAMOS SET estado=? WHERE codPrestamos=?";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("si", $estado, $codPrestamos);
+    // Actualizar el estado del préstamo
+    $sql = "UPDATE PRESTAMOS SET estado=? WHERE codPrestamos=?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("si", $estado, $codPrestamos);
 
-        if ($stmt->execute()) {
-            $success = "Estado del préstamo actualizado correctamente.";
-            header("refresh:2;url=../../views/viewsEmpleado/gestionPrestamos.php");
-        } else {
-            $error = "Error al actualizar: " . $stmt->error;
-        }
-
-        $stmt->close();
+    if ($stmt->execute()) {
+        $success = "Estado del préstamo actualizado correctamente.";
+        header("refresh:2;url=../../views/viewsEmpleado/gestionPrestamos.php");
+    } else {
+        $error = "Error al actualizar: " . $stmt->error;
     }
+
+    $stmt->close();
 }
 
+// Obtener el préstamo a editar
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     $sql = "SELECT 
                 P.codPrestamos,
                 P.estado,
-                L.titulo,
+                GROUP_CONCAT(L.titulo SEPARATOR ', ') AS titulo,
                 L.urlPortada,
                 C.nombre AS nombreCliente,
                 C.apellido AS apellidoCliente,
@@ -89,11 +47,15 @@ if (isset($_GET['id'])) {
             FROM 
                 PRESTAMOS P
             JOIN 
-                LIBROS L ON P.LIBROS_codLibros = L.codLibros
-            JOIN 
                 CLIENTES C ON P.USUARIOS_codUsuarios = C.codUsuarios
+            JOIN 
+                LIBROS_has_PRESTAMOS LP ON P.codPrestamos = LP.PRESTAMOS_codPrestamos
+            JOIN 
+                LIBROS L ON LP.LIBROS_codLibros = L.codLibros
             WHERE 
-                P.codPrestamos=?";
+                P.codPrestamos=?
+            GROUP BY 
+                P.codPrestamos;";
 
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -152,7 +114,7 @@ if (isset($_GET['id'])) {
                 </div>
 
                 <div class="form-control">
-                    <label class="label">Libro:</label>
+                    <label class="label">Libros:</label>
                     <input type="text" class="input input-bordered" value="<?php echo htmlspecialchars($tituloLibro); ?>" readonly>
                 </div>
 
@@ -170,7 +132,7 @@ if (isset($_GET['id'])) {
             <!-- Columna derecha -->
             <div class="space-y-4">
                 <div class="form-control">
-                    <label class="label">Portada del Libro:</label>
+                    <label for="urlPortada" class="label">Portada del Libro:</label>
                     <img src="<?php echo htmlspecialchars($urlPortada); ?>" alt="Portada del Libro" class="w-32 h-32 object-cover rounded">
                 </div>
 
@@ -183,7 +145,6 @@ if (isset($_GET['id'])) {
                         <option value="devuelto" <?php if ($estado == 'devuelto') echo 'selected'; ?>>Devuelto</option>
                         <option value="sancionado" <?php if ($estado == 'sancionado') echo 'selected'; ?>>Sancionado</option>
                         <option value="cancelado" <?php if ($estado == 'cancelado') echo 'selected'; ?>>Cancelado</option>
-
                     </select>
                 </div>
 

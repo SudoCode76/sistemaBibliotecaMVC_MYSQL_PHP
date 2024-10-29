@@ -17,12 +17,12 @@ if (isset($_GET['id'])) {
         $successMessage = "Préstamo eliminado con éxito.";
     } else {
         // Mostrar mensaje de error en caso de fallo
-        echo "Error al intentar eliminar el préstamo: " . $stmt->error;
+        $errorMessage = "Error al intentar eliminar el préstamo: " . $stmt->error;
     }
 
     $stmt->close();
 } else {
-    echo "ID no especificado";
+    $errorMessage = "ID no especificado";
     exit();
 }
 
@@ -48,7 +48,7 @@ $conexion->close();
         });
     </script>
 </head>
-<body>
+<body class="bg-base-100 text-base-content">
     <div class="container mx-auto mt-5">
         <?php if (!empty($successMessage)): ?>
             <!-- Alerta de éxito que desaparece automáticamente -->
@@ -56,6 +56,16 @@ $conexion->close();
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     <span><?php echo $successMessage; ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($errorMessage)): ?>
+            <!-- Alerta de error que desaparece automáticamente -->
+            <div id="error-alert" class="alert alert-error shadow-lg mb-5">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m3-3v6m9 3a9 9 0 10-9 9 9 9 0 009-9z"></path></svg>
+                    <span><?php echo $errorMessage; ?></span>
                 </div>
             </div>
         <?php endif; ?>
