@@ -33,19 +33,19 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
         <ul class="menu menu-horizontal px-1">
             <?php
             if ($_SESSION['rol'] == 'administrador') {
-                echo '<li><a href="../viewsEmpleado/verLibros.php">Gestion Libros</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionEmpleados.php">Cuentas Empleados</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionPrestamos.php">Prestamos</a></li>';
-                echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
+                echo '<li><a href="../viewsEmpleado/verLibros.php"><i class="fas fa-book mr-2"></i>Gestion Libros</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionClientes.php"><i class="fas fa-users mr-2"></i>Cuentas Clientes</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionEmpleados.php"><i class="fas fa-user-tie mr-2"></i>Cuentas Empleados</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionPrestamos.php"><i class="fas fa-book-reader mr-2"></i>Prestamos</a></li>';
+                echo '<li><a href="../viewsEmpleado/devoluciones.php"><i class="fas fa-undo mr-2"></i>Devoluciones</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php"><i class="fas fa-door-open mr-2"></i>Cuartos de estudio</a></li>';
             } 
             elseif ($_SESSION['rol'] == 'empleado') {
-                echo '<li><a href="../viewsEmpleado/verLibros.php">Gestion Libros</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionClientes.php">Cuentas Clientes</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionPrestamos.php">Prestamos</a></li>';
-                echo '<li><a href="../viewsEmpleado/devoluciones.php">Devoluciones</a></li>';
-                echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
+                echo '<li><a href="../viewsEmpleado/verLibros.php"><i class="fas fa-book mr-2"></i>Gestion Libros</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionClientes.php"><i class="fas fa-users mr-2"></i>Cuentas Clientes</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionPrestamos.php"><i class="fas fa-book-reader mr-2"></i>Prestamos</a></li>';
+                echo '<li><a href="../viewsEmpleado/devoluciones.php"><i class="fas fa-undo mr-2"></i>Devoluciones</a></li>';
+                echo '<li><a href="../viewsEmpleado/gestionCuartosEstudio.php"><i class="fas fa-door-open mr-2"></i>Cuartos de estudio</a></li>';
 
             } 
             ?>
@@ -71,17 +71,17 @@ require_once __DIR__ . '/../../config/checkSessionEmpleado.php';
     <ul class="menu p-4 bg-base-100 rounded-box">
         <?php
         if ($_SESSION['rol'] == 'administrador') {
-            echo '<li><a href="GestionLibros.php">Gestionar Libros</a></li>';
-            echo '<li><a href="gestionClientes.php">Cuentas Clientes</a></li>';
-            echo '<li><a href="gestionEmpleados.php">Cuentas Empleados</a></li>';
-            echo '<li><a href="prestamos.php">Prestamos</a></li>';
-            echo '<li><a href="devoluciones.php">Devoluciones</a></li>';
-            echo '<li><a href="gestionCuartosEstudio.php">Cuartos de estudio</a></li>';
+            echo '<li><a href="GestionLibros.php"><i class="fas fa-book mr-2"></i>Gestionar Libros</a></li>';
+            echo '<li><a href="gestionClientes.php"><i class="fas fa-users mr-2"></i>Cuentas Clientes</a></li>';
+            echo '<li><a href="gestionEmpleados.php"><i class="fas fa-user-tie mr-2"></i>Cuentas Empleados</a></li>';
+            echo '<li><a href="prestamos.php"><i class="fas fa-book-reader mr-2"></i>Prestamos</a></li>';
+            echo '<li><a href="devoluciones.php"><i class="fas fa-undo mr-2"></i>Devoluciones</a></li>';
+            echo '<li><a href="gestionCuartosEstudio.php"><i class="fas fa-door-open mr-2"></i>Cuartos de estudio</a></li>';
         } 
         elseif ($_SESSION['rol'] == 'empleado') {
-            echo '<li><a href="gestionClientes.php">Cuentas Clientes</a></li>';
-            echo '<li><a href="prestamos.php">Prestamos</a></li>';
-            echo '<li><a href="devoluciones.php">Devoluciones</a></li>';
+            echo '<li><a href="gestionClientes.php"><i class="fas fa-users mr-2"></i>Cuentas Clientes</a></li>';
+            echo '<li><a href="prestamos.php"><i class="fas fa-book-reader mr-2"></i>Prestamos</a></li>';
+            echo '<li><a href="devoluciones.php"><i class="fas fa-undo mr-2"></i>Devoluciones</a></li>';
         } 
         ?>
         <!-- Ícono de perfil en menú móvil -->

@@ -50,7 +50,7 @@ $result = $conexion->query($sql);
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body class="bg-base-100 text-base-content min-h-screen">
+<body class="bg-gray-100 text-base-content min-h-screen">
 
 <div class="container mx-auto p-6">
     <!-- Menú de navegación -->
@@ -85,24 +85,24 @@ $result = $conexion->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "
-                <div class='card bg-base-200 shadow-xl'>
+                <div class='card bg-white shadow-xl rounded-lg transform transition hover:-translate-y-1 hover:shadow-2xl'>
                     <figure class='px-4 pt-4'>
-                        <img src='" . htmlspecialchars($row['urlPortada']) . "' alt='Portada de " . htmlspecialchars($row['titulo']) . "' class='rounded-xl w-full h-48 object-cover'>
+                        <img src='" . htmlspecialchars($row['urlPortada']) . "' alt='Portada de " . htmlspecialchars($row['titulo']) . "' class='rounded-t-xl w-full h-48 object-cover'>
                     </figure>
-                    <div class='card-body'>
-                        <h2 class='card-title'>" . htmlspecialchars($row['titulo']) . "</h2>
-                        <p class='text-sm'>Autor: " . htmlspecialchars($row['nombreAutor']) . " " . htmlspecialchars($row['apellidoAutor']) . "</p>
-                        <p class='text-sm'>ISBN: " . htmlspecialchars($row['ISBN']) . "</p>
-                        <p class='text-sm'>Categoría: " . htmlspecialchars($row['nombreCategoria']) . "</p>
-                        <p class='text-sm'>Stock: " . htmlspecialchars($row['cantidadDisponible']) . "</p>
-                        <div class='card-actions justify-end'>
-                            <a href='../viewsEmpleado/verDetallesLibro.php?id=" . urlencode($row['codLibros']) . "' class='btn btn-primary btn-sm'>Ver Detalles</a>
+                    <div class='card-body p-6'>
+                        <h2 class='card-title text-lg font-semibold text-indigo-600'>" . htmlspecialchars($row['titulo']) . "</h2>
+                        <p class='text-sm text-gray-600'>Autor: " . htmlspecialchars($row['nombreAutor']) . " " . htmlspecialchars($row['apellidoAutor']) . "</p>
+                        <p class='text-sm text-gray-600'>ISBN: " . htmlspecialchars($row['ISBN']) . "</p>
+                        <p class='text-sm text-gray-600'>Categoría: " . htmlspecialchars($row['nombreCategoria']) . "</p>
+                        <p class='text-sm text-gray-600'>Stock: " . htmlspecialchars($row['cantidadDisponible']) . "</p>
+                        <div class='card-actions justify-end mt-4'>
+                            <a href='../viewsEmpleado/verDetallesLibro.php?id=" . urlencode($row['codLibros']) . "' class='btn btn-sm bg-gradient-to-r from-indigo-500 to-blue-500 text-white'>Ver Detalles</a>
                         </div>
                     </div>
                 </div>";
             }
         } else {
-            echo "<p class='text-center col-span-full'>No hay libros disponibles en el catálogo.</p>";
+            echo "<p class='text-center col-span-full text-gray-700'>No hay libros disponibles en el catálogo.</p>";
         }
         $conexion->close();
         ?>
