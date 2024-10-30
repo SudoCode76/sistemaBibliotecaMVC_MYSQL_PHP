@@ -83,7 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['estado'])) {
 <body>
 <div class="min-h-screen bg-base-100 text-base-content">
     <div class="container mx-auto p-4">
-        <?php include "../../views/viewsEmpleado/menuEmpleado.php"; ?>
 
         <div class="bg-base-200 p-6 rounded-box shadow-lg">
             <h1 class="text-3xl font-bold mb-6">Detalle de la Reserva</h1>

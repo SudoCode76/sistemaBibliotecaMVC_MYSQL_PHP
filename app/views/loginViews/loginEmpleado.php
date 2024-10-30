@@ -52,6 +52,8 @@
                 </label>
 
                 <button class="btn btn-outline">Iniciar Sesion</button>
+                <a href="../loginViews/loginCliente.php" class="btn btn-outline">Soy Cliente</a>
+
             </form>
 
             <?php if (isset($_GET['error'])): ?>
@@ -59,7 +61,6 @@
             <?php endif; ?>
 
 
-            <a class="btn btn-outline btn-success">Registrarse</a>
 
 
 

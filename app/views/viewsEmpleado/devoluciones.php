@@ -8,8 +8,10 @@ $fechaFin = isset($_GET['fechaFin']) ? $_GET['fechaFin'] : '';
 $sql = "SELECT P.codPrestamos, C.nombre AS nombreCliente, C.apellido AS apellidoCliente, L.titulo AS tituloLibro, P.fechaDevolucion
         FROM PRESTAMOS P
         JOIN CLIENTES C ON P.USUARIOS_codUsuarios = C.codUsuarios
-        JOIN LIBROS L ON P.LIBROS_codLibros = L.codLibros
+        JOIN LIBROS_has_PRESTAMOS LP ON P.codPrestamos = LP.PRESTAMOS_codPrestamos
+        JOIN LIBROS L ON LP.LIBROS_codLibros = L.codLibros
         WHERE P.estado = 'devuelto'";
+
 
 if (!empty($fechaInicio) && !empty($fechaFin)) {
     $sql .= " AND P.fechaDevolucion BETWEEN ? AND ?";
